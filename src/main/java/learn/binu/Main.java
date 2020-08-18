@@ -12,9 +12,7 @@ public class Main {
     private static Scanner scanner = new Scanner(System.in);
 
     public static void main(String[] args) {
-        final String order = getOrderSize();
-        final int orderSize = Integer.parseInt(order);
-
+        final int orderSize = getOrderSize();
         final List<Pack> packs = sweetShop.placeOrder(PACK_SIZES, orderSize);
         printOrder(packs);
     }
@@ -26,8 +24,18 @@ public class Main {
         }
     }
 
-    private static String getOrderSize() {
+    private static int getOrderSize() {
         System.out.println("Please enter the desired size of the order: ");
-        return scanner.nextLine();
+        int orderSize = 0;
+
+        try {
+            final String userInput = scanner.nextLine();
+            orderSize = Integer.parseInt(userInput);
+        } catch(NumberFormatException e) {
+            System.out.println("Please enter a valid number.");
+            System.exit(1);
+        }
+
+        return orderSize;
     }
 }
