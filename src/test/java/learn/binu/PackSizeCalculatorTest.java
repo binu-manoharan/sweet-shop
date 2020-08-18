@@ -30,6 +30,28 @@ public class PackSizeCalculatorTest {
     }
 
     @Test
+    public void should_find_the_smallest_pack_to_put_order_quantity_of_250() {
+        final List<Pack> optimalPackSize = packSizeCalculator.findOptimalPackSize(Main.PACK_SIZES, 250);
+        assertThat(optimalPackSize.size(), is(1));
+
+        final Pack singlePack = optimalPackSize.get(0);
+        assertThat(singlePack.getCapacity(), is(250));
+        assertThat(singlePack.getQuantity(), is(250));
+        assertThat(singlePack.getWastage(), is(0));
+    }
+
+    @Test
+    public void should_find_the_smallest_pack_to_put_order_quantity_of_251() {
+        final List<Pack> optimalPackSize = packSizeCalculator.findOptimalPackSize(Main.PACK_SIZES, 251);
+        assertThat(optimalPackSize.size(), is(1));
+
+        final Pack singlePack = optimalPackSize.get(0);
+        assertThat(singlePack.getCapacity(), is(500));
+        assertThat(singlePack.getQuantity(), is(251));
+        assertThat(singlePack.getWastage(), is(249));
+    }
+
+    @Test
     public void should_find_smallest_pack_that_fulfil_the_order() {
         assertThat(
                 packSizeCalculator.findSmallestPackThatFullyContainsTheOrder(Main.PACK_SIZES, 1),

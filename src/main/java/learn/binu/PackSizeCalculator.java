@@ -12,16 +12,19 @@ public class PackSizeCalculator {
      * @return a list of packs to place order for
      */
     public List<Pack> findOptimalPackSize(int[] packSizes, int orderSize) {
-        final List<Pack> order = new ArrayList<>();
+
+        final List<List<Pack>> orders = new ArrayList<>();
         final Integer smallestPackThatFullyContainsTheOrder = findSmallestPackThatFullyContainsTheOrder(packSizes, orderSize);
 
         if (smallestPackThatFullyContainsTheOrder != null) {
+            final List<Pack> order = new ArrayList<>();
             order.add(new Pack(smallestPackThatFullyContainsTheOrder, orderSize, smallestPackThatFullyContainsTheOrder - orderSize));
+            orders.add(order);
         } else {
 
         }
 
-        return order;
+        return orders.get(0);
     }
 
     /**
@@ -35,7 +38,7 @@ public class PackSizeCalculator {
         Arrays.sort(packSizes);
 
         for (int size : packSizes) {
-            if (orderSize < size) {
+            if (orderSize <= size) {
                 return size;
             }
         }
