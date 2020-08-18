@@ -5,26 +5,20 @@ import java.util.Arrays;
 import java.util.List;
 
 public class PackSizeCalculator {
-    private int[] packSize;
-
-    public PackSizeCalculator(int[] packSize) {
-        this.packSize = packSize;
-        Arrays.sort(this.packSize);
-    }
-
     /**
      * Finds the optimal number packs required to satisfy the given order, this minimises wastage and
      * then the number of packs
      *
-     * @param orderSize size of the order
      * @return a list of packs to place order for
      */
-    public List<Pack> findOptimalPackSize(int orderSize) {
+    public List<Pack> findOptimalPackSize(int[] packSizes, int orderSize) {
         final List<Pack> order = new ArrayList<>();
-        final Integer smallestPackThatFullyContainsTheOrder = findSmallestPackThatFullyContainsTheOrder(packSize, orderSize);
+        final Integer smallestPackThatFullyContainsTheOrder = findSmallestPackThatFullyContainsTheOrder(packSizes, orderSize);
 
         if (smallestPackThatFullyContainsTheOrder != null) {
             order.add(new Pack(smallestPackThatFullyContainsTheOrder, orderSize, smallestPackThatFullyContainsTheOrder - orderSize));
+        } else {
+
         }
 
         return order;
@@ -47,5 +41,12 @@ public class PackSizeCalculator {
         }
 
         return -1;
+    }
+
+    /**
+     * Get all pack sizes smaller than a particular pack
+     */
+    public int[] getRemainingPackSize(int[] packSizes, int packSize) {
+        return Arrays.stream(packSizes).filter(pack -> pack < packSize).toArray();
     }
 }

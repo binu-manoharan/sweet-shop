@@ -6,13 +6,13 @@ public class Main {
 
     public static int[] PACK_SIZES = new int[]{250, 500, 1000, 2000, 5000};
     private static Scanner scanner = new Scanner(System.in);
-    private static SweetShop sweetShop = new SweetShop(PACK_SIZES);
+    private static SweetShop sweetShop = new SweetShop();
 
     public static void main(String[] args) {
         final String order = getOrderSize();
         final int orderSize = Integer.parseInt(order);
 
-        sweetShop.placeOrder(orderSize);
+        sweetShop.placeOrder(PACK_SIZES, orderSize);
     }
 
     private static String getOrderSize() {
