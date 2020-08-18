@@ -36,7 +36,7 @@ public class PackSizeCalculatorTest {
 
         final Pack singlePack = optimalPackSize.get(0);
         assertThat(singlePack.getCapacity(), is(250));
-        assertThat(singlePack.getQuantity(), is(250));
+        assertThat(singlePack.getQuantity(), is(1));
         assertThat(singlePack.getWastage(), is(0));
     }
 
@@ -47,7 +47,7 @@ public class PackSizeCalculatorTest {
 
         final Pack singlePack = optimalPackSize.get(0);
         assertThat(singlePack.getCapacity(), is(500));
-        assertThat(singlePack.getQuantity(), is(251));
+        assertThat(singlePack.getQuantity(), is(1));
         assertThat(singlePack.getWastage(), is(249));
     }
 
@@ -86,6 +86,17 @@ public class PackSizeCalculatorTest {
         assertThat(thirdPack.getCapacity(), is(250));
         assertThat(thirdPack.getQuantity(), is(1));
         assertThat(thirdPack.getWastage(), is(249));
+    }
+
+    @Test
+    public void should_find_the_smallest_pack_to_put_order_quantity_of_14999() {
+        final List<Pack> optimalPackSize = packSizeCalculator.findOptimalPackSize(Main.PACK_SIZES, 14999);
+        assertThat(optimalPackSize.size(), is(1));
+
+        final Pack firstPack = optimalPackSize.get(0);
+        assertThat(firstPack.getCapacity(), is(5000));
+        assertThat(firstPack.getQuantity(), is(3));
+        assertThat(firstPack.getWastage(), is(1));
     }
 
     @Test

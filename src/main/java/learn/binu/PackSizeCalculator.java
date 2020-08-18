@@ -45,9 +45,7 @@ public class PackSizeCalculator {
             }
         } else {
             // There is a pack that can cater for this order fully, it is a potential order.
-            final List<Pack> order = new ArrayList<>(currentOrder);
-            order.add(new Pack(smallestPackThatFullyContainsTheOrder, orderSize, smallestPackThatFullyContainsTheOrder - orderSize));
-            orders.add(order);
+            addPackToOrder(orders, currentOrder, new Pack(smallestPackThatFullyContainsTheOrder, 1, smallestPackThatFullyContainsTheOrder - orderSize));
 
             // Also, recursively call the function to ensure an order with lower sized packs to be able to evaluate
             // wastage later.
@@ -56,6 +54,30 @@ public class PackSizeCalculator {
                 findAllPossibleOrders(orders, currentOrder, remainingPackSize, orderSize);
             }
         }
+    }
+
+    /**
+     * Add pack to order. If the pack already exists on the order merge it instead. This can happen with orders that can't
+     * fit in the biggest pack, if the second pass of it decides it needs the biggest pack again.
+     */
+    private void addPackToOrder(List<List<Pack>> orders, List<Pack> currentOrder, Pack pack) {
+        final List<Pack> order = new ArrayList<>(currentOrder);
+
+        if (order.contains(pack)) {
+            final int packIndex = order.indexOf(pack);
+            final Pack existingPack = order.get(packIndex);
+            order.remove(existingPack);
+
+            order.add(new Pack(
+                existingPack.getCapacity(),
+                existingPack.getQuantity() + pack.getQuantity(),
+                pack.getWastage()
+            ));
+        } else {
+            order.add(pack);
+        }
+
+        orders.add(order);
     }
 
     /**
