@@ -12,6 +12,7 @@ import static org.junit.Assert.assertThat;
 public class PackSizeCalculatorTest {
 
     private PackSizeCalculator packSizeCalculator;
+    private final int[] customPackSize1 = {1, 2, 3};
 
     @Before
     public void setUp() {
@@ -23,10 +24,7 @@ public class PackSizeCalculatorTest {
         final List<Pack> optimalPackSize = packSizeCalculator.findOptimalPackSize(Main.PACK_SIZES, 1);
         assertThat(optimalPackSize.size(), is(1));
 
-        final Pack singlePack = optimalPackSize.get(0);
-        assertThat(singlePack.getCapacity(), is(250));
-        assertThat(singlePack.getQuantity(), is(1));
-        assertThat(singlePack.getWastage(), is(249));
+        assertPack(optimalPackSize.get(0), 250, 1, 249);
     }
 
     @Test
@@ -34,10 +32,7 @@ public class PackSizeCalculatorTest {
         final List<Pack> optimalPackSize = packSizeCalculator.findOptimalPackSize(Main.PACK_SIZES, 250);
         assertThat(optimalPackSize.size(), is(1));
 
-        final Pack singlePack = optimalPackSize.get(0);
-        assertThat(singlePack.getCapacity(), is(250));
-        assertThat(singlePack.getQuantity(), is(1));
-        assertThat(singlePack.getWastage(), is(0));
+        assertPack(optimalPackSize.get(0), 250, 1, 0);
     }
 
     @Test
@@ -45,10 +40,7 @@ public class PackSizeCalculatorTest {
         final List<Pack> optimalPackSize = packSizeCalculator.findOptimalPackSize(Main.PACK_SIZES, 251);
         assertThat(optimalPackSize.size(), is(1));
 
-        final Pack singlePack = optimalPackSize.get(0);
-        assertThat(singlePack.getCapacity(), is(500));
-        assertThat(singlePack.getQuantity(), is(1));
-        assertThat(singlePack.getWastage(), is(249));
+        assertPack(optimalPackSize.get(0), 500, 1, 249);
     }
 
     @Test
@@ -56,15 +48,8 @@ public class PackSizeCalculatorTest {
         final List<Pack> optimalPackSize = packSizeCalculator.findOptimalPackSize(Main.PACK_SIZES, 501);
         assertThat(optimalPackSize.size(), is(2));
 
-        final Pack firstPack = optimalPackSize.get(0);
-        assertThat(firstPack.getCapacity(), is(500));
-        assertThat(firstPack.getQuantity(), is(1));
-        assertThat(firstPack.getWastage(), is(0));
-
-        final Pack secondPack = optimalPackSize.get(1);
-        assertThat(secondPack.getCapacity(), is(250));
-        assertThat(secondPack.getQuantity(), is(1));
-        assertThat(secondPack.getWastage(), is(249));
+        assertPack(optimalPackSize.get(0), 500, 1, 0);
+        assertPack(optimalPackSize.get(1), 250, 1, 249);
     }
 
     @Test
@@ -72,20 +57,9 @@ public class PackSizeCalculatorTest {
         final List<Pack> optimalPackSize = packSizeCalculator.findOptimalPackSize(Main.PACK_SIZES, 12001);
         assertThat(optimalPackSize.size(), is(3));
 
-        final Pack firstPack = optimalPackSize.get(0);
-        assertThat(firstPack.getCapacity(), is(5000));
-        assertThat(firstPack.getQuantity(), is(2));
-        assertThat(firstPack.getWastage(), is(0));
-
-        final Pack secondPack = optimalPackSize.get(1);
-        assertThat(secondPack.getCapacity(), is(2000));
-        assertThat(secondPack.getQuantity(), is(1));
-        assertThat(secondPack.getWastage(), is(0));
-
-        final Pack thirdPack = optimalPackSize.get(2);
-        assertThat(thirdPack.getCapacity(), is(250));
-        assertThat(thirdPack.getQuantity(), is(1));
-        assertThat(thirdPack.getWastage(), is(249));
+        assertPack(optimalPackSize.get(0), 5000, 2, 0);
+        assertPack(optimalPackSize.get(1), 2000, 1, 0);
+        assertPack(optimalPackSize.get(2), 250, 1, 249);
     }
 
     @Test
@@ -93,10 +67,27 @@ public class PackSizeCalculatorTest {
         final List<Pack> optimalPackSize = packSizeCalculator.findOptimalPackSize(Main.PACK_SIZES, 14999);
         assertThat(optimalPackSize.size(), is(1));
 
-        final Pack firstPack = optimalPackSize.get(0);
-        assertThat(firstPack.getCapacity(), is(5000));
-        assertThat(firstPack.getQuantity(), is(3));
-        assertThat(firstPack.getWastage(), is(1));
+        assertPack(optimalPackSize.get(0), 5000, 3, 1);
+    }
+
+    @Test
+    public void should_find_the_smallest_pack_to_put_order_quantity_of_874() {
+        final List<Pack> optimalPackSize = packSizeCalculator.findOptimalPackSize(Main.PACK_SIZES, 749);
+        assertThat(optimalPackSize.size(), is(2));
+        assertPack(optimalPackSize.get(0), 500, 1, 0);
+        assertPack(optimalPackSize.get(1), 250, 1, 1);
+    }
+
+    @Test
+    public void should_work_with_various_pack_sizes() {
+        final List<Pack> optimalPackSize1 = packSizeCalculator.findOptimalPackSize(customPackSize1, 16);
+        assertThat(optimalPackSize1.size(), is(2));
+        assertPack(optimalPackSize1.get(0), 3, 5, 0);
+        assertPack(optimalPackSize1.get(1), 1, 1, 0);
+
+        final List<Pack> optimalPackSize2 = packSizeCalculator.findOptimalPackSize(customPackSize1, 2);
+        assertThat(optimalPackSize2.size(), is(1));
+        assertPack(optimalPackSize2.get(0), 2, 1, 0);
     }
 
     @Test
@@ -139,5 +130,11 @@ public class PackSizeCalculatorTest {
         assertArrayEquals(packSizeCalculator.getRemainingPackSize(Main.PACK_SIZES, 1000), new int[]{250, 500});
         assertArrayEquals(packSizeCalculator.getRemainingPackSize(Main.PACK_SIZES, 2000), new int[]{250, 500, 1000});
         assertArrayEquals(packSizeCalculator.getRemainingPackSize(Main.PACK_SIZES, 5000), new int[]{250, 500, 1000, 2000});
+    }
+
+    private void assertPack(Pack pack, int expectedCapacity, int expectedQuantity, int expectedWastage) {
+        assertThat(pack.getCapacity(), is(expectedCapacity));
+        assertThat(pack.getQuantity(), is(expectedQuantity));
+        assertThat(pack.getWastage(), is(expectedWastage));
     }
 }

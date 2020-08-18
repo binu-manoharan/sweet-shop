@@ -29,24 +29,15 @@ public class Pack {
     public int getCapacity() {
         return capacity;
     }
-
-    public void setCapacity(int capacity) {
-        this.capacity = capacity;
-    }
-
     public int getQuantity() {
         return quantity;
     }
-
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
-    }
-
     public int getWastage() {
         return wastage;
     }
 
-    public void setWastage(int wastage) {
-        this.wastage = wastage;
+    @Override
+    public String toString() {
+        return "[" + quantity + " x " + capacity + "]";
     }
 }
