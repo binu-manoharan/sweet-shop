@@ -14,7 +14,7 @@ public class PackSizeCalculatorTest {
 
     @Before
     public void setUp() {
-        packSizeCalculator = new PackSizeCalculator(Main.PACK_SIZE);
+        packSizeCalculator = new PackSizeCalculator(Main.PACK_SIZES);
     }
 
     @Test
@@ -26,5 +26,38 @@ public class PackSizeCalculatorTest {
         assertThat(singlePack.getCapacity(), is(250));
         assertThat(singlePack.getQuantity(), is(1));
         assertThat(singlePack.getWastage(), is(249));
+    }
+
+    @Test
+    public void should_find_smallest_pack_that_fulfil_the_order() {
+        assertThat(
+                packSizeCalculator.findSmallestPackThatFullyContainsTheOrder(Main.PACK_SIZES, 1),
+                is(250)
+        );
+
+        assertThat(
+                packSizeCalculator.findSmallestPackThatFullyContainsTheOrder(Main.PACK_SIZES, 450),
+                is(500)
+        );
+
+        assertThat(
+                packSizeCalculator.findSmallestPackThatFullyContainsTheOrder(Main.PACK_SIZES, 750),
+                is(1000)
+        );
+
+        assertThat(
+                packSizeCalculator.findSmallestPackThatFullyContainsTheOrder(Main.PACK_SIZES, 1500),
+                is(2000)
+        );
+
+        assertThat(
+                packSizeCalculator.findSmallestPackThatFullyContainsTheOrder(Main.PACK_SIZES, 2500),
+                is(5000)
+        );
+
+        assertThat(
+                packSizeCalculator.findSmallestPackThatFullyContainsTheOrder(Main.PACK_SIZES, 5500),
+                is(-1)
+        );
     }
 }
