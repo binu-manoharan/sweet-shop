@@ -2,9 +2,12 @@ package learn.binu;
 
 import java.util.List;
 
+/**
+ * A sweet shop that is ready to get their orders going.
+ */
 public class SweetShop {
 
-    final PackSizeCalculator packSizeCalculator = new PackSizeCalculator();
+    private final PackSizeCalculator packSizeCalculator = new PackSizeCalculator();
 
     public List<Pack> placeOrder(int[] packSize, int orderSize) {
 

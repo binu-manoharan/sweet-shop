@@ -2,7 +2,11 @@ package learn.binu;
 
 import java.util.*;
 
+/**
+ * Calculator for packaging orders into optimal packs with minimal wastage
+ */
 public class PackSizeCalculator {
+
     /**
      * Finds the optimal number packs required to satisfy the given order, this minimises wastage and
      * then the number of packs
@@ -83,7 +87,7 @@ public class PackSizeCalculator {
     /**
      * Find and return the order with least wastage
      */
-    public List<Pack> getOrderWithLeastWastage(List<List<Pack>> orders) {
+    private List<Pack> getOrderWithLeastWastage(List<List<Pack>> orders) {
         orders.sort((order1, order2) -> {
             final int order1Wastage = order1.stream()
                     .map(Pack::getWastage)
@@ -130,7 +134,7 @@ public class PackSizeCalculator {
     /**
      * Get the biggest pack size
      */
-    public int getBiggestPackSize(int[] packSizes) {
+    private int getBiggestPackSize(int[] packSizes) {
         final OptionalInt max = Arrays.stream(packSizes).max();
         if (max.isPresent()) {
             return max.getAsInt();

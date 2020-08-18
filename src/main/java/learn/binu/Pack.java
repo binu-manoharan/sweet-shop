@@ -2,7 +2,12 @@ package learn.binu;
 
 import java.util.Objects;
 
+/**
+ * Pack information with capacity/size, quantity and wastage details.
+ * It is uniquely defined by its capacity and hence equals only needs that.
+ */
 public class Pack {
+
     private int capacity;
     private int quantity;
     private int wastage;
